@@ -1,0 +1,10 @@
+#include "transfercontroller.h"
+
+TransmissionController::TransmissionController(QObject *parent):
+    QObject(parent)
+{}
+
+TransmissionController::~TransmissionController()
+{
+    if(m_thread) delete m_thread;
+}
