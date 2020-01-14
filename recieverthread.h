@@ -5,6 +5,10 @@
 #include <QTcpSocket>
 #include <QString>
 #include <QDataStream>
+#include <QFile>
+#include <QDebug>
+
+#include "globals.h"
 
 class RecieverThread : public QThread
 {
@@ -17,7 +21,7 @@ public:
 signals:
     void error(QTcpSocket::SocketError error, QString errorString);
 
-    void recieved(QString);
+    void fileError(QFile::FileError error, QString errorString);
 
 private:
     qintptr _socketDescriptor;

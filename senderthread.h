@@ -4,23 +4,28 @@
 #include <QThread>
 #include <QTcpSocket>
 #include <QHostAddress>
+#include <QFile>
+#include <QDebug>
+
+#include "globals.h"
 
 class SenderThread : public QThread
 {
     Q_OBJECT
 
 public:
-    SenderThread(QHostAddress host, quint16 port, const QString data, QObject* parent);
+    SenderThread(QHostAddress host, const QString filePath, QObject* parent);
 
     void run() override;
 
 signals:
-    void error(QTcpSocket::SocketError error, QString errorString);
+    void fileError(QFile::FileError error, QString errorString);
+
+    void socketError(QTcpSocket::SocketError error, QString errorString);
 
 private:
-    QString _data;
+    QString _path;
     QHostAddress _host;
-    quint16 _port;
 };
 
 #endif // SENDERTHREAD_H

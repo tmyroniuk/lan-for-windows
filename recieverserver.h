@@ -12,9 +12,6 @@ class RecieverServer : public QTcpServer
 public:
     RecieverServer(QObject* parent = nullptr);
 
-signals:
-    void dataRecieved(QString);
-
 protected:
     void incomingConnection(qintptr socketDescriptor) override;
 

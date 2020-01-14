@@ -1,6 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Window 2.12
-import SocketQML.peermanager 1.0
+import SocketQML.transmissionmanager 1.0
 import QtQuick.Controls 1.6
 
 Window {
@@ -10,15 +10,15 @@ Window {
     visible: true
     title: qsTr("SearcherWindow")
 
-    PeerManager{
-        id: manager
+    TrManager{
+        id: trManager
     }
 
     TextInput {
         id: textInput
         y: 0
         height: 45
-        text: qsTr("")
+        text: trManager.data
         verticalAlignment: Text.AlignVCenter
         horizontalAlignment: Text.AlignHCenter
         anchors.right: parent.right
@@ -26,6 +26,7 @@ Window {
         anchors.left: parent.left
         anchors.leftMargin: 0
         font.pixelSize: 16
+        onTextEdited: trManager.data = text
     }
 
     Button {
@@ -34,6 +35,6 @@ Window {
         y: 62
         text: qsTr("SEND")
         anchors.horizontalCenter: parent.horizontalCenter
-        onClicked: manager.refresh()
+        onClicked: trManager.sendToLaptop()
     }
 }

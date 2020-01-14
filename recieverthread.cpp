@@ -7,26 +7,39 @@ RecieverThread::RecieverThread(qintptr socketDescriptor, QObject *parent):
 void RecieverThread::run()
 {
     QTcpSocket socket;
-    QString data;
-
-
+    QString fileName;
+    qint64 fileSize;
+    qint64 currentSize = 0;
     if(!socket.setSocketDescriptor(_socketDescriptor)){
         emit error(socket.error(), socket.errorString());
         return;
     }
 
-    QDataStream stream(&socket);
-    stream.setVersion(QDataStream::Qt_5_12);
+    QDataStream readStream(&socket);
+    readStream.setVersion(QDataStream::Qt_5_12);
 
-    do{
-        if (!socket.waitForReadyRead()) {
-           emit error(socket.error(), socket.errorString());
-           return;
-       }
+    do {
+        readStream.startTransaction();
+        readStream >> fileName;
+        readStream >> fileSize;
+        qDebug() << fileName << fileSize;
+    } while(!readStream.commitTransaction());
 
-       stream.startTransaction();
-       stream >> data;
-    } while(!stream.commitTransaction());
-
-    emit recieved(data);
+    QByteArray block;
+    QFile file(SAVING_PATH + fileName);
+    if(file.open(QIODevice::WriteOnly)){
+        while(currentSize < fileSize){
+            while(!readStream.commitTransaction()){
+                readStream.startTransaction();
+                readStream >> block;
+            }
+            file.write(block);
+            currentSize += block.size();
+            qDebug() << currentSize << fileSize << "\n";
+        }
+    }
+    else{
+        qDebug() << "reciever cant open" << SAVING_PATH + fileName;
+        emit fileError(file.error(), file.errorString());
+    }
 }

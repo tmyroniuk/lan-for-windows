@@ -1,14 +1,14 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
-#include "peermanager.h"
+#include "transmissionmanager.h"
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
 
-    qmlRegisterType<PeerManager>("SocketQML.peermanager", 1, 0, "PeerManager");
+    qmlRegisterType<TransmissionManager>("SocketQML.transmissionmanager", 1, 0, "TrManager");
 
     engine.load(QStringLiteral("qrc:/main.qml"));
     if (engine.rootObjects().empty())
