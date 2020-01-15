@@ -14,27 +14,15 @@ Window {
         id: trManager
     }
 
-    TextInput {
-        id: textInput
-        y: 0
-        height: 45
-        text: trManager.data
-        verticalAlignment: Text.AlignVCenter
-        horizontalAlignment: Text.AlignHCenter
-        anchors.right: parent.right
-        anchors.rightMargin: 0
-        anchors.left: parent.left
-        anchors.leftMargin: 0
-        font.pixelSize: 16
-        onTextEdited: trManager.data = text
-    }
+    DropArea {
+        id: dropArea
+        anchors.fill: parent
 
-    Button {
-        id: send
-        x: 69
-        y: 62
-        text: qsTr("SEND")
-        anchors.horizontalCenter: parent.horizontalCenter
-        onClicked: trManager.sendToLaptop()
+        enabled: true
+
+        onDropped: {
+            for(var i = 0; i < drop.urls.length; i++)
+                trManager.sendToLaptop(drop.urls[i])
+        }
     }
 }

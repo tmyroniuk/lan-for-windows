@@ -5,6 +5,7 @@
 #include <QTcpSocket>
 #include <QFile>
 #include <QDataStream>
+#include <QThread>
 
 #include "globals.h"
 
@@ -24,7 +25,6 @@ signals:
 
 public slots:
     void recieveTransmission();
-
 };
 
 #endif // RECIEVER_H

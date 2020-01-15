@@ -7,6 +7,8 @@
 #include <QFile>
 #include <QDataStream>
 #include <QFileInfo>
+#include <QThread>
+#include <QUrl>
 
 #include "globals.h"
 
@@ -14,11 +16,11 @@ class Sender : public QObject
 {
     Q_OBJECT
 
-    QString _filePath;
+    QUrl _filePath;
     QHostAddress _host;
 
 public:
-    explicit Sender(QHostAddress host, const QString filePath, QObject *parent = nullptr);
+    explicit Sender(QHostAddress host, const QUrl filePath, QObject *parent = nullptr);
 
 signals:
     void fileError(QFile::FileError error, QString errorString);

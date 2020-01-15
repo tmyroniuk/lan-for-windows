@@ -10,26 +10,19 @@ TransmissionManager::TransmissionManager(QObject *parent) :
 
 TransmissionManager::~TransmissionManager() {delete _listener;}
 
-QString TransmissionManager::data() {return _data;}
-
-void TransmissionManager::send(const QHostAddress& address)
+void TransmissionManager::send(const QHostAddress& address, const QUrl& path)
 {
+    qDebug() << path;
     auto thread = new QThread;
-    auto sender = new Sender(address, _data);
+    auto sender = new Sender(address, path);
     sender->moveToThread(thread);
     connect(thread, &QThread::finished, thread, &QObject::deleteLater);
     connect(thread, &QThread::finished, sender, &QObject::deleteLater);
+    connect(thread, &QThread::started, sender, &Sender::startTransmission);
     thread->start();
-    sender->startTransmission();
 }
 
-void TransmissionManager::sendToLaptop()
+void TransmissionManager::sendToLaptop(const QUrl& path)
 {
-    send(QHostAddress("192.168.1.242"));
-}
-
-void TransmissionManager::setData(const QString& data)
-{
-    _data = data;
-    emit dataChanged();
+    send(QHostAddress("192.168.1.242"), path);
 }

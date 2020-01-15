@@ -1,13 +1,13 @@
 #include "sender.h"
 
-Sender::Sender(QHostAddress host, const QString filePath, QObject *parent) :
+Sender::Sender(QHostAddress host, const QUrl filePath, QObject *parent) :
     QObject(parent),
     _filePath(filePath),
     _host(host) {}
 
 void Sender::startTransmission()
 {
-    QFile file(_filePath);
+    QFile file(_filePath.toLocalFile());
     if(file.open(QIODevice::ReadOnly)){
         QTcpSocket socket;
         socket.connectToHost(_host, TCP_PORT);
@@ -19,7 +19,7 @@ void Sender::startTransmission()
         QByteArray block;
         QDataStream wrightStream(&block, QIODevice::WriteOnly);
         wrightStream.setVersion(QDataStream::Qt_5_12);
-        wrightStream << QFileInfo(file).fileName();
+        wrightStream << _filePath.fileName();
         wrightStream << file.size();
         socket.write(block);
         //Sending file
@@ -35,4 +35,6 @@ void Sender::startTransmission()
         qDebug() << "sender cant open";
         emit fileError(file.error(), file.errorString());
     }
+    qDebug() << "sending finised" << _filePath << QThread::currentThread();
+    QThread::currentThread()->quit();
 }

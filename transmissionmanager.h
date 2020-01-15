@@ -3,6 +3,8 @@
 
 #include <QObject>
 #include <QThread>
+#include <QTimerEvent>
+#include <QUrl>
 
 #include "recieverserver.h"
 #include "sender.h"
@@ -11,29 +13,18 @@ class TransmissionManager : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString data READ data WRITE setData NOTIFY dataChanged)
-
 public:
     explicit TransmissionManager(QObject *parent = nullptr);
 
     ~TransmissionManager();
 
-    QString data();
-
 public slots:
-    void send(const QHostAddress& address);
+    void send(const QHostAddress& address, const QUrl& path);
 
-    void sendToLaptop();
-
-private slots:
-    void setData(const QString& data);
-
-signals:
-    void dataChanged();
+    void sendToLaptop(const QUrl& path);
 
 private:
     RecieverServer* _listener;
-    QString _data;
 };
 
 #endif // TRANSMISSIONMANAGER_H

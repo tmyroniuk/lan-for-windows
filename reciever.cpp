@@ -18,29 +18,27 @@ void Reciever::recieveTransmission()
     QDataStream readStream(&socket);
     readStream.setVersion(QDataStream::Qt_5_12);
 
-    do {
-        socket.waitForReadyRead();
-        readStream.startTransaction();
-        readStream >> fileName;
-        readStream >> fileSize;
-        qDebug() << fileName << fileSize;
-    } while(!readStream.commitTransaction());
+    socket.waitForReadyRead();
+    readStream >> fileName;
+    readStream >> fileSize;
 
     QByteArray block;
     QFile file(SAVING_PATH + fileName);
     if(file.open(QIODevice::WriteOnly)){
         while(currentSize < fileSize){
-            while(!readStream.commitTransaction()){
-                readStream.startTransaction();
-                readStream >> block;
-            }
+            socket.waitForReadyRead();
+            block = socket.read(BLOCK_LEN);
             file.write(block);
             currentSize += block.size();
-            qDebug() << currentSize << fileSize << "\n";
         }
+        socket.disconnectFromHost();
+        socket.waitForDisconnected();
+        file.close();
     }
     else{
         qDebug() << "reciever cant open" << SAVING_PATH + fileName;
         emit fileError(file.error(), file.errorString());
     }
+    qDebug() << "recieving finished" << SAVING_PATH + fileName << QThread::currentThread();
+    QThread::currentThread()->quit();
 }
