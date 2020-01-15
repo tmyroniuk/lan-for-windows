@@ -18,10 +18,10 @@ SOURCES += \
         globals.cpp \
         main.cpp \
         peermanager.cpp \
+        reciever.cpp \
         recieverserver.cpp \
-        recieverthread.cpp \
         searcher.cpp \
-        senderthread.cpp \
+        sender.cpp \
         transmissionmanager.cpp
 
 RESOURCES += qml.qrc
@@ -40,8 +40,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     globals.h \
     peermanager.h \
+    reciever.h \
     recieverserver.h \
-    recieverthread.h \
     searcher.h \
-    senderthread.h \
+    sender.h \
     transmissionmanager.h

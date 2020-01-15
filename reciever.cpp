@@ -1,10 +1,10 @@
-#include "recieverthread.h"
+#include "reciever.h"
 
-RecieverThread::RecieverThread(qintptr socketDescriptor, QObject *parent):
-    QThread(parent),
+Reciever::Reciever(qintptr socketDescriptor, QObject *parent) :
+    QObject(parent),
     _socketDescriptor(socketDescriptor) {}
 
-void RecieverThread::run()
+void Reciever::recieveTransmission()
 {
     QTcpSocket socket;
     QString fileName;
@@ -19,6 +19,7 @@ void RecieverThread::run()
     readStream.setVersion(QDataStream::Qt_5_12);
 
     do {
+        socket.waitForReadyRead();
         readStream.startTransaction();
         readStream >> fileName;
         readStream >> fileSize;

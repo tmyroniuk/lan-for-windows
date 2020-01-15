@@ -2,8 +2,9 @@
 #define RECIEVERSERVER_H
 
 #include <QTcpServer>
+#include <QThread>
 
-#include "recieverthread.h"
+#include "reciever.h"
 
 class RecieverServer : public QTcpServer
 {

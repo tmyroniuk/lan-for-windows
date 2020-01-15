@@ -1,12 +1,15 @@
 #include "recieverserver.h"
 
-
 RecieverServer::RecieverServer(QObject *parent):
     QTcpServer(parent) {}
 
 void RecieverServer::incomingConnection(qintptr socketDescriptor)
 {
-    auto thread = new RecieverThread(socketDescriptor, this);
-    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+    auto thread = new QThread;
+    auto reciever = new Reciever(socketDescriptor);
+    reciever->moveToThread(thread);
+    connect(thread, &QThread::finished, thread, &QObject::deleteLater);
+    connect(thread, &QThread::finished, reciever, &QObject::deleteLater);
     thread->start();
+    reciever->recieveTransmission();
 }

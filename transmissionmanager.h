@@ -2,10 +2,10 @@
 #define TRANSMISSIONMANAGER_H
 
 #include <QObject>
-#include <QHostAddress>
+#include <QThread>
 
 #include "recieverserver.h"
-#include "senderthread.h"
+#include "sender.h"
 
 class TransmissionManager : public QObject
 {

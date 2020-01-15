@@ -1,21 +1,13 @@
-#include "senderthread.h"
-#include "globals.h"
+#include "sender.h"
 
-#include <QByteArray>
-#include <QDataStream>
-#include <QIODevice>
-#include <QFileInfo>
+Sender::Sender(QHostAddress host, const QString filePath, QObject *parent) :
+    QObject(parent),
+    _filePath(filePath),
+    _host(host) {}
 
-SenderThread::SenderThread(QHostAddress host, const QString filePath, QObject *parent):
-    QThread(parent),
-    _path(filePath),
-    _host(host) {
-    qDebug() << filePath;
-}
-
-void SenderThread::run()
+void Sender::startTransmission()
 {
-    QFile file(_path);
+    QFile file(_filePath);
     if(file.open(QIODevice::ReadOnly)){
         QTcpSocket socket;
         socket.connectToHost(_host, TCP_PORT);

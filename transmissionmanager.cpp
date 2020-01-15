@@ -14,9 +14,13 @@ QString TransmissionManager::data() {return _data;}
 
 void TransmissionManager::send(const QHostAddress& address)
 {
-    auto thread = new SenderThread(address, _data, this);
-    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+    auto thread = new QThread;
+    auto sender = new Sender(address, _data);
+    sender->moveToThread(thread);
+    connect(thread, &QThread::finished, thread, &QObject::deleteLater);
+    connect(thread, &QThread::finished, sender, &QObject::deleteLater);
     thread->start();
+    sender->startTransmission();
 }
 
 void TransmissionManager::sendToLaptop()
