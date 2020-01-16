@@ -25,6 +25,7 @@ void Sender::startTransmission()
         //Sending file
         while(!file.atEnd()){
             block = file.read(BLOCK_LEN);
+            socket.waitForBytesWritten();
             socket.write(block);
         }
         socket.disconnectFromHost();
