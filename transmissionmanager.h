@@ -23,6 +23,11 @@ public slots:
 
     void sendToLaptop(const QUrl& path);
 
+private slots:
+    void fileError(QFileDevice::FileError error, QString errorString);
+
+    void socketError(QAbstractSocket::SocketError error, QString errorString);
+
 private:
     RecieverServer* _listener;
 };

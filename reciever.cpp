@@ -7,11 +7,16 @@ Reciever::Reciever(qintptr socketDescriptor, QObject *parent) :
 void Reciever::recieveTransmission()
 {
     QTcpSocket socket;
+    connect(&socket, QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error), [this, &socket](){
+        emit socketError(socket.error(), socket.errorString());
+        QThread::currentThread()->quit();
+        QThread::currentThread()->wait();});
+
     QString fileName;
     qint64 fileSize;
     qint64 currentSize = 0;
     if(!socket.setSocketDescriptor(_socketDescriptor)){
-        emit error(socket.error(), socket.errorString());
+        emit socketError(socket.error(), socket.errorString());
         return;
     }
 
@@ -24,6 +29,10 @@ void Reciever::recieveTransmission()
 
     QByteArray block;
     QFile file(SAVING_PATH + fileName);
+    connect(&file, &QFileDevice::error, [this, &file](){
+        emit fileError(file.error(), file.errorString());
+        QThread::currentThread()->quit();
+        QThread::currentThread()->wait();});
     if(file.open(QIODevice::WriteOnly)){
         while(currentSize < fileSize){
             socket.waitForReadyRead();

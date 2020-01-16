@@ -18,10 +18,10 @@ class Reciever : public QObject
 public:
     explicit Reciever(qintptr _socketDescriptor, QObject *parent = nullptr);
 
-signals:
-    void error(QTcpSocket::SocketError error, QString errorString);
+signals:    
+    void fileError(QFileDevice::FileError error, QString errorString);
 
-    void fileError(QFile::FileError error, QString errorString);
+    void socketError(QAbstractSocket::SocketError error, QString errorString);
 
 public slots:
     void recieveTransmission();

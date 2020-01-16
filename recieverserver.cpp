@@ -11,5 +11,7 @@ void RecieverServer::incomingConnection(qintptr socketDescriptor)
     connect(thread, &QThread::finished, thread, &QObject::deleteLater);
     connect(thread, &QThread::finished, reciever, &QObject::deleteLater);
     connect(thread, &QThread::started, reciever, &Reciever::recieveTransmission);
+    connect(reciever, &Reciever::socketError, this, &RecieverServer::socketError);
+    connect(reciever, &Reciever::fileError, this, &RecieverServer::fileError);
     thread->start();
 }

@@ -23,9 +23,9 @@ public:
     explicit Sender(QHostAddress host, const QUrl filePath, QObject *parent = nullptr);
 
 signals:
-    void fileError(QFile::FileError error, QString errorString);
+    void fileError(QFileDevice::FileError error, QString errorString);
 
-    void socketError(QTcpSocket::SocketError error, QString errorString);
+    void socketError(QAbstractSocket::SocketError error, QString errorString);
 
 public slots:
     void startTransmission();
