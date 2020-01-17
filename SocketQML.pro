@@ -17,7 +17,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         globals.cpp \
         main.cpp \
-        peermanager.cpp \
+        peer.cpp \
+        peerlist.cpp \
+        peermodel.cpp \
         reciever.cpp \
         recieverserver.cpp \
         searcher.cpp \
@@ -39,7 +41,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     globals.h \
-    peermanager.h \
+    peer.h \
+    peerlist.h \
+    peermodel.h \
     reciever.h \
     recieverserver.h \
     searcher.h \

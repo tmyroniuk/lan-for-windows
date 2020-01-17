@@ -18,15 +18,8 @@ public:
 
     ~TransmissionManager();
 
-public slots:
-    void send(const QHostAddress& address, const QUrl& path);
-
-    void sendToLaptop(const QUrl& path);
-
-private slots:
-    void fileError(QFileDevice::FileError error, QString errorString);
-
-    void socketError(QAbstractSocket::SocketError error, QString errorString);
+public:
+    static void send(const QHostAddress& address, const QUrl& path);
 
 private:
     RecieverServer* _listener;

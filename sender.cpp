@@ -2,32 +2,23 @@
 
 Sender::Sender(QHostAddress host, const QUrl filePath, QObject *parent) :
     QObject(parent),
-    _filePath(filePath),
-    _host(host) {}
+    _host(host),
+    _filePath(filePath) {}
 
-void Sender::startTransmission()
+void Sender::start()
 {
+    QTcpSocket socket;
     QFile file(_filePath.toLocalFile());
-    connect(&file, &QFileDevice::error, [this, &file](){
-        emit fileError(file.error(), file.errorString());
-        QThread::currentThread()->quit();
-        QThread::currentThread()->wait();});
-
     if(file.open(QIODevice::ReadOnly)){
-        QTcpSocket socket;
-        connect(&socket, QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error), [this, &socket](){
-            emit socketError(socket.error(), socket.errorString());
-            QThread::currentThread()->quit();
-            QThread::currentThread()->wait();});
-
         socket.connectToHost(_host, TCP_PORT);
-        if (!socket.waitForConnected()) {
-            emit socketError(socket.error(), socket.errorString());
+        qDebug() << "start";
+        if (!socket.waitForConnected(TIMEOUT)) {
+            onError(file, socket);
             return;
         }
         //sending data
         QByteArray block;
-        QDataStream wrightStream(&block, QIODevice::WriteOnly);
+        QDataStream wrightStream(&block, QIODevice::WriteOnly);        
         wrightStream.setVersion(QDataStream::Qt_5_12);
         wrightStream << _filePath.fileName();
         wrightStream << file.size();
@@ -35,17 +26,29 @@ void Sender::startTransmission()
         //Sending file
         while(!file.atEnd()){
             block = file.read(BLOCK_LEN);
-            socket.waitForBytesWritten();
+            if(!socket.waitForBytesWritten(TIMEOUT)){
+                onError(file, socket);
+                return;
+            }
             socket.write(block);
         }
-        socket.disconnectFromHost();
-        socket.waitForDisconnected();
         file.close();
+        socket.disconnectFromHost();
+        socket.waitForDisconnected(TIMEOUT);
     }
-    else {
-        qDebug() << "sender cant open";
-        emit fileError(file.error(), file.errorString());
+    else{
+        onError(file, socket);
+        return;
     }
-    qDebug() << "sending finised" << _filePath << QThread::currentThread();
-    QThread::currentThread()->quit();
+    qDebug() << "sending finised" << file.fileName() << QThread::currentThread();
+    emit finished(true);
+}
+
+void Sender::onError(QFile& file, QTcpSocket& socket)
+{
+    qDebug() <<"file" << file.error() << file.errorString();
+    qDebug() <<"socket" << socket.error() << socket.errorString();
+    file.close();
+    socket.disconnectFromHost();
+    emit finished(false);
 }

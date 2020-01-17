@@ -12,19 +12,19 @@
 class Reciever : public QObject
 {
     Q_OBJECT
-
     qintptr _socketDescriptor;
 
 public:
-    explicit Reciever(qintptr _socketDescriptor, QObject *parent = nullptr);
+    explicit Reciever(qintptr socketDescriptor, QObject *parent = nullptr);
 
 signals:    
-    void fileError(QFileDevice::FileError error, QString errorString);
-
-    void socketError(QAbstractSocket::SocketError error, QString errorString);
+    void finished(bool);
 
 public slots:
-    void recieveTransmission();
+    void start();
+    
+private slots:
+    void onError(QFile& file, QTcpSocket& socket);
 };
 
 #endif // RECIEVER_H

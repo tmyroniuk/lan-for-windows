@@ -2,52 +2,57 @@
 
 Reciever::Reciever(qintptr socketDescriptor, QObject *parent) :
     QObject(parent),
-    _socketDescriptor(socketDescriptor) {}
+    _socketDescriptor(socketDescriptor){}
 
-void Reciever::recieveTransmission()
-{
+void Reciever::start() {
+    QFile file;
     QTcpSocket socket;
-    connect(&socket, QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error), [this, &socket](){
-        emit socketError(socket.error(), socket.errorString());
-        QThread::currentThread()->quit();
-        QThread::currentThread()->wait();});
-
     QString fileName;
+    QByteArray block;
     qint64 fileSize;
     qint64 currentSize = 0;
+
+    //setup sockret
     if(!socket.setSocketDescriptor(_socketDescriptor)){
-        emit socketError(socket.error(), socket.errorString());
+        onError(file, socket);
         return;
     }
-
+    //get file name and size
     QDataStream readStream(&socket);
     readStream.setVersion(QDataStream::Qt_5_12);
-
-    socket.waitForReadyRead();
+    if(!socket.waitForReadyRead(TIMEOUT)){
+        onError(file, socket);
+        return;
+    }
     readStream >> fileName;
     readStream >> fileSize;
-
-    QByteArray block;
-    QFile file(SAVING_PATH + fileName);
-    connect(&file, &QFileDevice::error, [this, &file](){
-        emit fileError(file.error(), file.errorString());
-        QThread::currentThread()->quit();
-        QThread::currentThread()->wait();});
+    //get file
     if(file.open(QIODevice::WriteOnly)){
         while(currentSize < fileSize){
-            socket.waitForReadyRead();
+            if(!socket.waitForReadyRead(TIMEOUT)){
+                onError(file, socket);
+                return;
+            }
             block = socket.read(BLOCK_LEN);
             file.write(block);
             currentSize += block.size();
         }
-        socket.disconnectFromHost();
-        socket.waitForDisconnected();
         file.close();
+        socket.disconnectFromHost();
+        socket.waitForDisconnected(TIMEOUT);
     }
     else{
-        qDebug() << "reciever cant open" << SAVING_PATH + fileName;
-        emit fileError(file.error(), file.errorString());
+        onError(file, socket);
+        return;
     }
     qDebug() << "recieving finished" << SAVING_PATH + fileName << QThread::currentThread();
-    QThread::currentThread()->quit();
+    emit finished(true);
+}
+
+void Reciever::onError(QFile& file, QTcpSocket& socket) {
+    qDebug() <<"file" << file.error() << file.errorString();
+    qDebug() <<"socket" << socket.error() << socket.errorString();
+    file.remove();
+    socket.disconnectFromHost();
+    emit finished(false);
 }

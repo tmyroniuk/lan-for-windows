@@ -35,7 +35,7 @@ void Searcher::onRecieved()
         } else if (datagram.data().at(0) == '~'){
             auto address = QHostAddress(datagram.senderAddress().toIPv4Address());
             emit answerRecieved(
-                        QString::fromUtf8(QHostInfo::fromName(address.toString()).hostName().toUtf8()),
+                        QHostInfo::fromName(address.toString()).hostName(),
                         address);
         }
     }

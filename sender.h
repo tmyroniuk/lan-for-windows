@@ -15,20 +15,20 @@
 class Sender : public QObject
 {
     Q_OBJECT
-
-    QUrl _filePath;
     QHostAddress _host;
+    QUrl _filePath;
 
 public:
     explicit Sender(QHostAddress host, const QUrl filePath, QObject *parent = nullptr);
 
 signals:
-    void fileError(QFileDevice::FileError error, QString errorString);
-
-    void socketError(QAbstractSocket::SocketError error, QString errorString);
+    void finished(bool);
 
 public slots:
-    void startTransmission();
+    void start();
+    
+private slots:
+    void onError(QFile& file, QTcpSocket& socket);
 };
 
 #endif // SENDER_H
