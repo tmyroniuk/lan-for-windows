@@ -1,7 +1,6 @@
-QT += quick
-QT += network
+QT += qml quick network quickwidgets
 
-CONFIG += c++11
+CONFIG += c++17
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -49,3 +48,5 @@ HEADERS += \
     searcher.h \
     sender.h \
     transmissionmanager.h
+
+DISTFILES +=

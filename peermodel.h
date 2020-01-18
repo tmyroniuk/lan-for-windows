@@ -3,12 +3,12 @@
 
 #include <QAbstractListModel>
 
-class PeerList;
+#include "peerlist.h"
 
 class PeerModel : public QAbstractListModel
 {
     Q_OBJECT
-    Q_PROPERTY(PeerList* list READ list WRIGHT setList)
+    Q_PROPERTY(PeerList* list READ list WRITE setList)
 
     PeerList* _list;
 
@@ -19,7 +19,8 @@ public:
 
     enum{
         NameRole = Qt::UserRole,
-        AddressRole
+        AddressRole,
+        SendRole
     };
 
     // Basic functionality:
@@ -29,9 +30,11 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
 
+    bool setData(const QModelIndex &index, const QVariant &value, int role) override;
+
     PeerList* list() const;
 
-    void setList(PeerList *list);
+    void setList(PeerList* list);
 };
 
 #endif // PEERMODEL_H

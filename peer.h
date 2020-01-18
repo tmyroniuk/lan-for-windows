@@ -11,11 +11,17 @@ class Peer
 public:    
     Peer(const QString& name, const QHostAddress& address);
 
+    Peer() = default;
+
+    Peer(const Peer& other);
+
     QString name() const;
 
     QHostAddress address() const;
 
     void send(QUrl fileName);
+
+    void operator = (const Peer& other);
 };
 
 #endif // PEER_H

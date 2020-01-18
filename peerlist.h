@@ -6,10 +6,12 @@
 
 #include "searcher.h"
 #include "peer.h"
+#include "transmissionmanager.h"
 
 class PeerList : public QObject{
     Q_OBJECT
 
+    TransmissionManager _trManager;
     Searcher _searcher;
     QVector<Peer> _list;
 
