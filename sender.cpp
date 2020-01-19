@@ -11,7 +11,6 @@ void Sender::start()
     QFile file(_filePath.toLocalFile());
     if(file.open(QIODevice::ReadOnly)){
         socket.connectToHost(_host, TCP_PORT);
-        qDebug() << "start";
         if (!socket.waitForConnected(TIMEOUT)) {
             onError(file, socket);
             return;

@@ -5,10 +5,7 @@
 #include "globals.h"
 
 PeerList::PeerList(QObject *parent) :
-    QObject(parent) {
-    _list.append(Peer("TTR", QHostAddress("192.168.1.1")));
-    _list.append(Peer("sfdg", QHostAddress("192.168.1.2")));
-}
+    QObject(parent) {}
 
 QVector<Peer> PeerList::data() const { return _list ;}
 

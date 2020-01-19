@@ -1,4 +1,4 @@
-QT += qml quick network quickwidgets
+QT += qml quick network quickcontrols2
 
 CONFIG += c++17
 

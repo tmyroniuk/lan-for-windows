@@ -40,7 +40,6 @@ QHash<int, QByteArray> PeerModel::roleNames() const
 
 bool PeerModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    qDebug() <<"here";
     if (!index.isValid() || !_list)
         return false;
 

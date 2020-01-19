@@ -1,6 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QQuickStyle>
 
 #include "transmissionmanager.h"
 #include "peerlist.h"
@@ -10,7 +11,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
-
+    QQuickStyle::setStyle("Universal");
 
     qmlRegisterType<PeerModel>("NetApp", 1, 0, "PeerModel");
     qmlRegisterUncreatableType<PeerList>("NetApp", 1, 0, "PeerList", "Backend type");

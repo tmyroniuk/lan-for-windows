@@ -20,8 +20,6 @@ public:
     QHostAddress address() const;
 
     void send(QUrl fileName);
-
-    void operator = (const Peer& other);
 };
 
 #endif // PEER_H

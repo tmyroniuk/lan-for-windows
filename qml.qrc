@@ -2,6 +2,8 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>AppGui.qml</file>
+        <file>TrayControl.qml</file>
+        <file>InListControl.qml</file>
     </qresource>
     <qresource prefix="/ico">
         <file>QCicon.png</file>
