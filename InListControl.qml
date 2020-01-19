@@ -7,6 +7,7 @@ Rectangle {
     height: 50; width: parent.width
 
     MouseArea {
+        anchors.fill: parent
         onClicked: application.hideWindow()
     }
 }

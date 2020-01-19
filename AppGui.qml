@@ -6,6 +6,7 @@ import NetApp 1.0
 
 ListView{
     width: parent.width
+    height: parent.height - 50
 
     model: PeerModel{
         list: peerList
@@ -23,7 +24,7 @@ ListView{
             }
 
             onExited: {
-                rectangle.color = "cyan"
+                rectangle.color = "white"
             }
 
             onDropped: {

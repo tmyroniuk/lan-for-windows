@@ -8,7 +8,7 @@ ApplicationWindow {
     x: Screen.width + 2; y: 0
     color: "transparent"
 
-    flags: Qt.Window | Qt.FramelessWindowHint | Qt.WA_TranslucentBackground | Qt.NoDropShadowWindowHint | Qt.WindowStaysOnTopHint
+    flags: Qt.Popup | Qt.NoDropShadowWindowHint | Qt.WindowStaysOnTopHint
 
     visible: x >= Screen.width ? false : true
 
