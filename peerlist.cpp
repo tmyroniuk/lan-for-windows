@@ -13,6 +13,9 @@ void PeerList::refresh()
 {
     emit startRefresh();
     _list.clear();
+    emit finishRefresh();
+
+    emit startRefresh();
     connect(&_searcher, &Searcher::answerRecieved, this,
         [this](const QString& name, const QHostAddress& address){ _list.append(Peer(name, address)); });
 

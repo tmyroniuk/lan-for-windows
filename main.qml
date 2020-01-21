@@ -4,8 +4,8 @@ import QtQuick.Controls 2.12
 
 ApplicationWindow {
     id: application
-    width: Screen.width / 5; height: gui.count * 100 + 50
-    x: Screen.width + 2; y: 0
+    width: Screen.width / 7; height: gui.count * 100 + 70
+    x: Screen.width + 2; y: Screen.height / 12
     color: "transparent"
 
     flags: Qt.Popup | Qt.NoDropShadowWindowHint | Qt.WindowStaysOnTopHint
@@ -25,7 +25,7 @@ ApplicationWindow {
     TrayControl {}
 
     Behavior on x {
-        SpringAnimation { spring: 10; damping: 20 }
+        SpringAnimation { spring: 8; damping: 10 }
     }
 
     function hideWindow() {

@@ -5,4 +5,4 @@ const quint16 TCP_PORT = 7755;
 const qint64 BLOCK_LEN = (2<<17) * 1000;
 const QString SAVING_PATH = "D:\\";
 const int TIMEOUT = 5000;
-const int REFRESH_TIME = 200;
+const int REFRESH_TIME = 1000;
