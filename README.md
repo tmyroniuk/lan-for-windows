@@ -6,6 +6,6 @@
 * Intuitive drag & drop interface
 
 ###### Planned features:
-> Transfer folders.
-> Customization settings.
-> Notifications about transfer status.
+> * Transfer folders
+> * Customization settings
+> * Notifications about transfer status
