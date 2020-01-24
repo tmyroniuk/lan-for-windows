@@ -11,13 +11,17 @@ void Sender::start()
     QFile file(_filePath.toLocalFile());
 
     //Open file
-    if(!file.open(QIODevice::ReadOnly))
+    if(!file.open(QIODevice::ReadOnly)){
         onError(file, socket);
+        return;
+    }
 
     //Connect
     socket.connectToHost(_host, TCP_PORT);
-    if (!socket.waitForConnected(TIMEOUT))
+    if (!socket.waitForConnected(TIMEOUT)){
         onError(file, socket);
+        return;
+    }
 
     //Sending data
     QByteArray block;
@@ -30,12 +34,16 @@ void Sender::start()
     //Sending file
     while(!file.atEnd()){
         block = file.read(BLOCK_LEN);
-        if(file.error() != QFile::NoError || socket.error() != QTcpSocket::UnknownSocketError)
+        if(file.error() != QFile::NoError || socket.error() != QTcpSocket::UnknownSocketError){
             onError(file, socket);
+            return;
+        }
         while(socket.bytesToWrite() > MAX_BOOFER_SIZE){
             socket.waitForBytesWritten(TIMEOUT);
-            if(file.error() != QFile::NoError || socket.error() != QTcpSocket::UnknownSocketError)
+            if(file.error() != QFile::NoError || socket.error() != QTcpSocket::UnknownSocketError){
                 onError(file, socket);
+                return;
+            }
         }
         socket.write(block);
     }
@@ -56,5 +64,4 @@ void Sender::onError(QFile& file, QTcpSocket& socket)
     if(file.isOpen()) file.close();
     if(socket.state() == QTcpSocket::ConnectedState) socket.disconnectFromHost();
     emit finished(false);
-    QThread::currentThread()->wait();
 }

@@ -15,23 +15,30 @@ void Reciever::start() {
     readStream.setVersion(QDataStream::Qt_5_12);
 
     //setup socket
-    if(!socket.setSocketDescriptor(_socketDescriptor))
+    if(!socket.setSocketDescriptor(_socketDescriptor)){
         onError(file, socket);
+        return;
+    }
 
     //get file name and size
+    socket.waitForReadyRead(TIMEOUT);
     readStream >> fileName;
     readStream >> fileSize;
     file.setFileName(SAVING_PATH + fileName);
 
     //create file
-    if(!file.open(QIODevice::WriteOnly))
+    if(!file.open(QIODevice::WriteOnly)){
         onError(file, socket);
+        return;
+    }
 
     //recieve data
     while(currentSize < fileSize){
         socket.waitForReadyRead(TIMEOUT);
-        if(file.error() != QFile::NoError || socket.error() != QTcpSocket::UnknownSocketError)
+        if(file.error() != QFile::NoError || socket.error() != QTcpSocket::UnknownSocketError){
             onError(file, socket);
+            return;
+        }
         file.write(socket.read(BLOCK_LEN));
         currentSize += block.size();
     }
@@ -51,5 +58,4 @@ void Reciever::onError(QFile& file, QTcpSocket& socket) {
     file.remove();
     if(socket.state() == QTcpSocket::ConnectedState) socket.disconnectFromHost();
     emit finished(false);
-    QThread::currentThread()->wait();
 }
