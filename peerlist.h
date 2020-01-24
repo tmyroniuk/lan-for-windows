@@ -23,6 +23,8 @@ public:
 public slots:
     void refresh();
 
+    void clear();
+
 signals:
     void startRefresh();
 

@@ -4,7 +4,7 @@ import QtQuick.Controls 2.12
 
 ApplicationWindow {
     id: application
-    width: Screen.width / 7; height: gui.count * 100 + 70
+    width: 400; height: gui.count * 120 + 70
     x: Screen.width + 2; y: Screen.height / 12
     color: "transparent"
 
@@ -33,6 +33,7 @@ ApplicationWindow {
     }
 
     function showWindow() {
+        peerList.clear()
         x = Screen.width - width
         peerList.refresh()
     }

@@ -26,6 +26,7 @@ void Reciever::start() {
     }
     readStream >> fileName;
     readStream >> fileSize;
+    file.setFileName(SAVING_PATH + fileName);
     //get file
     if(file.open(QIODevice::WriteOnly)){
         while(currentSize < fileSize){

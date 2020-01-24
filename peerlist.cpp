@@ -11,9 +11,7 @@ QVector<Peer> PeerList::data() const { return _list ;}
 
 void PeerList::refresh()
 {
-    emit startRefresh();
     _list.clear();
-    emit finishRefresh();
 
     emit startRefresh();
     connect(&_searcher, &Searcher::answerRecieved, this,
@@ -25,4 +23,11 @@ void PeerList::refresh()
         _searcher.disconnect(this);
         emit finishRefresh();
     });
+}
+
+void PeerList::clear()
+{
+    emit startRefresh();
+    _list.clear();
+    emit finishRefresh();
 }

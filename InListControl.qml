@@ -17,5 +17,6 @@ Rectangle {
         font.pointSize: 20
         anchors.centerIn: parent
         text: qsTr("Close")
+        font.family: "Arial"
     }
 }

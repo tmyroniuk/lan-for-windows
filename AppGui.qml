@@ -1,6 +1,6 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
-import QtQuick.Controls.Universal 2.12
+import QtQuick.Controls.Material 2.12
 import QtQuick.Layouts 1.12
 
 import NetApp 1.0
@@ -16,7 +16,7 @@ ListView{
     }
 
     populate: Transition {
-        SpringAnimation { property: "x"; from: x + width; to: x; spring: 8; damping: 10 }
+        NumberAnimation { property: "x"; from: x + width + 2; duration: 200 }
     }
 
     model: PeerModel{
@@ -25,32 +25,37 @@ ListView{
 
     delegate: Rectangle {
         id: rectangle
-        width: parent.width; height: 100;
-        color: Universal.color(Universal.Steel)
-        border.color: Universal.color(Universal.Cobalt)
-        radius: 10
+        width: parent.width
+        height: 100
+
+        color: (index & 1) ? Material.color(Material.Yellow, Material.Shade400) : Material.color(Material.Blue, Material.Shade400)
+        border.color: Material.color(Material.Cyan, Material.ShadeA100)
+        border.width: droper.containsDrag ? 5 : 0
+        radius: 4
 
         DropArea {
+            id: droper
             anchors.fill: parent
             enabled: true
-            onEntered: {
-                rectangle.border.width = 5
-            }
-
-            onExited: {
-                rectangle.border.width = 0
-            }
 
             onDropped: {
-                rectangle.border.width = 0
                 for(var i = 0; i < drop.urls.length; i++)
                     send = drop.urls[i]
             }
         }
+
         ColumnLayout {
             width: parent.width
-            Text { font.pointSize: 20; width: parent.width; text: name; fontSizeMode: Text.Fit; horizontalAlignment: Text.AlignHCenter }
-            Text { font.pointSize: 14; width: parent.width; text: address; fontSizeMode: Text.Fit; horizontalAlignment: Text.AlignHCenter }
+            Text {
+                horizontalAlignment: Text.AlignHCenter
+                elide: Text.ElideRight
+                Layout.preferredWidth: parent.width
+                text: name
+                padding: 10
+                font.pointSize: 24
+            }
+            Text {
+                font.pointSize: 14; Layout.preferredWidth: parent.width; text: address; padding: 10; horizontalAlignment: Text.AlignHCenter}
         }
     }
 }
