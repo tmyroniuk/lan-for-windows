@@ -11,41 +11,36 @@ void Reciever::start() {
     QByteArray block;
     qint64 fileSize;
     qint64 currentSize = 0;
-
-    //setup sockret
-    if(!socket.setSocketDescriptor(_socketDescriptor)){
-        onError(file, socket);
-        return;
-    }
-    //get file name and size
     QDataStream readStream(&socket);
     readStream.setVersion(QDataStream::Qt_5_12);
-    if(!socket.waitForReadyRead(TIMEOUT)){
+
+    //setup socket
+    if(!socket.setSocketDescriptor(_socketDescriptor))
         onError(file, socket);
-        return;
-    }
+
+    //get file name and size
     readStream >> fileName;
     readStream >> fileSize;
     file.setFileName(SAVING_PATH + fileName);
-    //get file
-    if(file.open(QIODevice::WriteOnly)){
-        while(currentSize < fileSize){
-            if(!socket.waitForReadyRead(TIMEOUT)){
-                onError(file, socket);
-                return;
-            }
-            block = socket.read(BLOCK_LEN);
-            file.write(block);
-            currentSize += block.size();
-        }
-        file.close();
-        socket.disconnectFromHost();
-        socket.waitForDisconnected(TIMEOUT);
-    }
-    else{
+
+    //create file
+    if(!file.open(QIODevice::WriteOnly))
         onError(file, socket);
-        return;
+
+    //recieve data
+    while(currentSize < fileSize){
+        socket.waitForReadyRead(TIMEOUT);
+        if(file.error() != QFile::NoError || socket.error() != QTcpSocket::UnknownSocketError)
+            onError(file, socket);
+        file.write(socket.read(BLOCK_LEN));
+        currentSize += block.size();
     }
+
+    //Disconnect and close file
+    file.close();
+    socket.disconnectFromHost();
+    socket.waitForDisconnected(TIMEOUT);
+
     qDebug() << "recieving finished" << SAVING_PATH + fileName << QThread::currentThread();
     emit finished(true);
 }
@@ -54,6 +49,7 @@ void Reciever::onError(QFile& file, QTcpSocket& socket) {
     qDebug() <<"file" << file.error() << file.errorString();
     qDebug() <<"socket" << socket.error() << socket.errorString();
     file.remove();
-    socket.disconnectFromHost();
+    if(socket.state() == QTcpSocket::ConnectedState) socket.disconnectFromHost();
     emit finished(false);
+    QThread::currentThread()->wait();
 }

@@ -51,11 +51,11 @@ ListView{
                 elide: Text.ElideRight
                 Layout.preferredWidth: parent.width
                 text: name
-                padding: 10
-                font.pointSize: 24
+                padding: 5
+                font.pixelSize: 40
             }
             Text {
-                font.pointSize: 14; Layout.preferredWidth: parent.width; text: address; padding: 10; horizontalAlignment: Text.AlignHCenter}
+                font.pixelSize: 20; Layout.preferredWidth: parent.width; text: address; padding: 10; horizontalAlignment: Text.AlignHCenter}
         }
     }
 }
