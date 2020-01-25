@@ -39,7 +39,8 @@ void Reciever::start() {
             onError(file, socket);
             return;
         }
-        file.write(socket.read(BLOCK_LEN));
+        block = socket.read(BLOCK_LEN);
+        file.write(block);
         currentSize += block.size();
     }
 
