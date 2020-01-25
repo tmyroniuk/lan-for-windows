@@ -15,6 +15,7 @@ Searcher::Searcher(QObject *parent) :
 
 Searcher::~Searcher()
 {
+    _listener->close();
     delete _listener;
     delete _sender;
 }

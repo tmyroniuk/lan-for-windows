@@ -16,11 +16,10 @@ int main(int argc, char *argv[])
     qmlRegisterType<PeerModel>("NetApp", 1, 0, "PeerModel");
     qmlRegisterUncreatableType<PeerList>("NetApp", 1, 0, "PeerList", "Backend type");
 
-
-    PeerList list;
+    auto list = new PeerList;
 
     QQmlApplicationEngine engine;
-    engine.rootContext()->setContextProperty(QStringLiteral("peerList"), &list);
+    engine.rootContext()->setContextProperty(QStringLiteral("peerList"), list);
     engine.load(QStringLiteral("qrc:/main.qml"));
     if (engine.rootObjects().empty())
         return -1;

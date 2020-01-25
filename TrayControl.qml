@@ -10,7 +10,7 @@ SystemTrayIcon {
             text: qsTr("Quit")
             onTriggered: {
                 hide()
-                Qt.quit()
+                Qt.callLater(Qt.quit)
             }
         }
     }

@@ -15,7 +15,7 @@ class PeerModel : public QAbstractListModel
 public:
     explicit PeerModel(QObject *parent = nullptr);
 
-    ~PeerModel() override;
+    ~PeerModel();
 
     enum{
         NameRole = Qt::UserRole,

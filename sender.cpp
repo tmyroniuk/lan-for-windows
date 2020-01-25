@@ -30,6 +30,7 @@ void Sender::start()
     wrightStream << _filePath.fileName();
     wrightStream << file.size();
     socket.write(block);
+    socket.flush();
 
     //Sending file
     while(!file.atEnd()){
