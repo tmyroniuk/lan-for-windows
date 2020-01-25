@@ -1,7 +1,7 @@
 #include "sender.h"
 
 Sender::Sender(QHostAddress host, const QUrl filePath, QObject *parent) :
-    QObject(parent),
+    Transmission(parent),
     _host(host),
     _filePath(filePath) {}
 
@@ -35,16 +35,10 @@ void Sender::start()
     //Sending file
     while(!file.atEnd()){
         block = file.read(BLOCK_LEN);
-        if(file.error() != QFile::NoError || socket.error() != QTcpSocket::UnknownSocketError){
-            onError(file, socket);
-            return;
-        }
+        if(checkForError(file, socket)) return;
         while(socket.bytesToWrite() > MAX_BOOFER_SIZE){
             socket.waitForBytesWritten(TIMEOUT);
-            if(file.error() != QFile::NoError || socket.error() != QTcpSocket::UnknownSocketError){
-                onError(file, socket);
-                return;
-            }
+            if(checkForError(file, socket)) return;
         }
         socket.write(block);
     }
@@ -54,15 +48,7 @@ void Sender::start()
     socket.disconnectFromHost();
     socket.waitForDisconnected(TIMEOUT);
 
-    qDebug() << "sending finised" << file.fileName() << QThread::currentThread();
+    qDebug() << "sending finised" << file.fileName();
     emit finished(true);
 }
 
-void Sender::onError(QFile& file, QTcpSocket& socket)
-{
-    qDebug() <<"file" << file.error() << file.errorString();
-    qDebug() <<"socket" << socket.error() << socket.errorString();
-    if(file.isOpen()) file.close();
-    if(socket.state() == QTcpSocket::ConnectedState) socket.disconnectFromHost();
-    emit finished(false);
-}

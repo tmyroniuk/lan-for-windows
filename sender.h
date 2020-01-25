@@ -2,17 +2,15 @@
 #define SENDER_H
 
 #include <QObject>
-#include <QTcpSocket>
 #include <QHostAddress>
-#include <QFile>
 #include <QDataStream>
 #include <QFileInfo>
-#include <QThread>
 #include <QUrl>
 
+#include "transmission.h"
 #include "globals.h"
 
-class Sender : public QObject
+class Sender : public Transmission
 {
     Q_OBJECT
     QHostAddress _host;
@@ -21,14 +19,8 @@ class Sender : public QObject
 public:
     explicit Sender(QHostAddress host, const QUrl filePath, QObject *parent = nullptr);
 
-signals:
-    void finished(bool);
-
 public slots:
-    void start();
-    
-private slots:
-    void onError(QFile& file, QTcpSocket& socket);
+    void start() override;
 };
 
 #endif // SENDER_H

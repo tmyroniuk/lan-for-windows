@@ -1,16 +1,17 @@
 #include "reciever.h"
 
 Reciever::Reciever(qintptr socketDescriptor, QObject *parent) :
-    QObject(parent),
+    Transmission(parent),
     _socketDescriptor(socketDescriptor){}
 
 void Reciever::start() {
     QFile file;
     QTcpSocket socket;
     QString fileName;
-    QByteArray block;
     qint64 fileSize;
+
     qint64 currentSize = 0;
+    QByteArray block;
     QDataStream readStream(&socket);
     readStream.setVersion(QDataStream::Qt_5_12);
 
@@ -35,8 +36,8 @@ void Reciever::start() {
     //recieve data
     while(currentSize < fileSize){
         socket.waitForReadyRead(TIMEOUT);
-        if(file.error() != QFile::NoError || socket.error() != QTcpSocket::UnknownSocketError){
-            onError(file, socket);
+        if(checkForError(file, socket)){
+            file.remove();
             return;
         }
         block = socket.read(BLOCK_LEN);
@@ -49,14 +50,6 @@ void Reciever::start() {
     socket.disconnectFromHost();
     socket.waitForDisconnected(TIMEOUT);
 
-    qDebug() << "recieving finished" << SAVING_PATH + fileName << QThread::currentThread();
+    qDebug() << "recieving finished" << SAVING_PATH + fileName;
     emit finished(true);
-}
-
-void Reciever::onError(QFile& file, QTcpSocket& socket) {
-    qDebug() <<"file" << file.error() << file.errorString();
-    qDebug() <<"socket" << socket.error() << socket.errorString();
-    file.remove();
-    if(socket.state() == QTcpSocket::ConnectedState) socket.disconnectFromHost();
-    emit finished(false);
 }

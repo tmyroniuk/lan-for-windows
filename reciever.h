@@ -2,14 +2,12 @@
 #define RECIEVER_H
 
 #include <QObject>
-#include <QTcpSocket>
-#include <QFile>
 #include <QDataStream>
-#include <QThread>
 
+#include "transmission.h"
 #include "globals.h"
 
-class Reciever : public QObject
+class Reciever : public Transmission
 {
     Q_OBJECT
     qintptr _socketDescriptor;
@@ -17,14 +15,8 @@ class Reciever : public QObject
 public:
     explicit Reciever(qintptr socketDescriptor, QObject *parent = nullptr);
 
-signals:    
-    void finished(bool);
-
 public slots:
-    void start();
-    
-private slots:
-    void onError(QFile& file, QTcpSocket& socket);
+    void start() override;
 };
 
 #endif // RECIEVER_H
