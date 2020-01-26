@@ -58,11 +58,7 @@ void PeerModel::setList(PeerList *list)
 {
     beginResetModel();
 
-    if(_list){
-        _list->disconnect(this);
-        delete _list;
-    }
-
+    if(_list) delete _list;
     _list = list;
 
     connect(_list, &PeerList::startRefresh, this, [this](){ beginResetModel(); });

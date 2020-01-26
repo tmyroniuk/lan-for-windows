@@ -49,6 +49,6 @@ void Sender::start()
     socket.waitForDisconnected(TIMEOUT);
 
     qDebug() << "sending finised" << file.fileName();
-    emit finished(true);
+    emit finished(true, this);
 }
 

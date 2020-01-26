@@ -51,5 +51,5 @@ void Reciever::start() {
     socket.waitForDisconnected(TIMEOUT);
 
     qDebug() << "recieving finished" << SAVING_PATH + fileName;
-    emit finished(true);
+    emit finished(true, this);
 }

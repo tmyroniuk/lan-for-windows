@@ -1,6 +1,6 @@
 #include "transmission.h"
 
-Transmission::Transmission(QObject *parent) : QObject(parent) {}
+Transmission::Transmission(QObject *parent) : QObject(parent), _progress() {}
 
 bool Transmission::checkForError(QFile &file, QTcpSocket &socket)
 {
@@ -17,5 +17,7 @@ void Transmission::onError(QFile& file, QTcpSocket& socket)
     qDebug() <<"socket" << socket.error() << socket.errorString();
     if(file.isOpen()) file.close();
     if(socket.state() == QTcpSocket::ConnectedState) socket.disconnectFromHost();
-    emit finished(false);
+    emit finished(false, this);
 }
+
+double Transmission::progress() const { return _progress; }
