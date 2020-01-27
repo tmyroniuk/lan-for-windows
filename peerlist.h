@@ -20,6 +20,8 @@ public:
 
     QVector<Peer> data() const;
 
+    void sendTo(int i, const QUrl& filePath);
+
 public slots:
     void refresh();
 

@@ -24,7 +24,8 @@ SOURCES += \
         searcher.cpp \
         sender.cpp \
         transmission.cpp \
-        transmissionmanager.cpp
+        transmissionmanager.cpp \
+        transmissionmodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -49,6 +50,7 @@ HEADERS += \
     searcher.h \
     sender.h \
     transmission.h \
-    transmissionmanager.h
+    transmissionmanager.h \
+    transmissionmodel.h
 
 DISTFILES +=

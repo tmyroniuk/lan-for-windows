@@ -19,12 +19,11 @@ QVariant PeerModel::data(const QModelIndex &index, int role) const
     if (!index.isValid() || !_list)
         return QVariant();
 
-    const Peer peer = _list->data().at(index.row());
     switch(role){
     case NameRole:
-        return peer.name();
+        return _list->data()[index.row()].name();
     case AddressRole:
-        return peer.address().toString();
+        return _list->data()[index.row()].address().toString();
     }
     return QVariant();
 }
@@ -43,10 +42,9 @@ bool PeerModel::setData(const QModelIndex &index, const QVariant &value, int rol
     if (!index.isValid() || !_list)
         return false;
 
-    Peer peer = _list->data().at(index.row());
     switch(role){
     case SendRole:
-        peer.send(value.toUrl());
+        _list->sendTo(index.row(), value.toUrl());
         return true;
     }
     return false;

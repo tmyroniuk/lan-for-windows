@@ -7,7 +7,9 @@
 PeerList::PeerList(QObject *parent) :
     QObject(parent) {}
 
-QVector<Peer> PeerList::data() const { return _list ;}
+QVector<Peer> PeerList::data() const { return _list; }
+
+void PeerList::sendTo(int i, const QUrl& filePath) { TransmissionManager::send(_list[i], filePath); }
 
 void PeerList::refresh()
 {

@@ -9,6 +9,8 @@ void Sender::start()
 {
     QTcpSocket socket;
     QFile file(_filePath.toLocalFile());
+    _fileName = _filePath.fileName();
+    emit nameChanged();
 
     //Open file
     if(!file.open(QIODevice::ReadOnly)){
@@ -25,10 +27,12 @@ void Sender::start()
 
     //Sending data
     QByteArray block;
+    qint64 fileSize = file.size();
+    qint64 currentSize = 0;
     QDataStream wrightStream(&block, QIODevice::WriteOnly);
     wrightStream.setVersion(QDataStream::Qt_5_12);
-    wrightStream << _filePath.fileName();
-    wrightStream << file.size();
+    wrightStream << _fileName;
+    wrightStream << fileSize;
     socket.write(block);
     socket.flush();
 
@@ -41,6 +45,9 @@ void Sender::start()
             if(checkForError(file, socket)) return;
         }
         socket.write(block);
+        currentSize += block.size();
+        _progress = 1.0 * currentSize / fileSize;
+        emit progressChanged();
     }
 
     //Disconnect and close file
@@ -49,6 +56,6 @@ void Sender::start()
     socket.waitForDisconnected(TIMEOUT);
 
     qDebug() << "sending finised" << file.fileName();
-    emit finished(true, this);
+    emit finished(true);
 }
 

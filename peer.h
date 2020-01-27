@@ -3,33 +3,46 @@
 
 #include <QObject>
 #include <QVector>
+#include <QHostAddress>
 
-#include "transmissionmanager.h"
+#include "transmission.h"
 
-class Peer : QObject
+class Peer : public QObject
 {
     Q_OBJECT
 
     QString _name;
     QHostAddress _address;
     QVector<Transmission*> _transmissions;
+
+private slots:
+    void onProgressChanged();
+
+    void onFinished(bool status);
+
+    void onNameChanged();
+
 signals:
+    void nameChanged(int);
+
     void progressChanged(int);
 
-    void
+    void startRemove(int);
+
+    void finishRemove();
 
 public:    
     Peer(const QString& name, const QHostAddress& address, QObject* parent = nullptr);
 
     Peer() = default;
 
-    //Peer(const Peer& other);
+    Peer(const Peer& other);
 
     QString name() const;
 
     QHostAddress address() const;
 
-    void send(QUrl fileName);
+    void addTransmission(Transmission* transmission);
 
     QVector<Transmission *> transmissions() const;
 };

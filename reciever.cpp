@@ -26,6 +26,7 @@ void Reciever::start() {
     readStream >> fileName;
     readStream >> fileSize;
     file.setFileName(SAVING_PATH + fileName);
+    emit nameChanged();
 
     //create file
     if(!file.open(QIODevice::WriteOnly)){
@@ -43,6 +44,8 @@ void Reciever::start() {
         block = socket.read(BLOCK_LEN);
         file.write(block);
         currentSize += block.size();
+        _progress = 1.0 * currentSize / fileSize;
+        emit progressChanged();
     }
 
     //Disconnect and close file
@@ -51,5 +54,5 @@ void Reciever::start() {
     socket.waitForDisconnected(TIMEOUT);
 
     qDebug() << "recieving finished" << SAVING_PATH + fileName;
-    emit finished(true, this);
+    emit finished(true);
 }

@@ -9,6 +9,8 @@
 #include "recieverserver.h"
 #include "sender.h"
 
+class Peer;
+
 class TransmissionManager : public QObject
 {
     Q_OBJECT
@@ -19,7 +21,7 @@ public:
     ~TransmissionManager();
 
 public:
-    static void send(const QHostAddress& address, const QUrl& path);
+    static void send(Peer& peer, const QUrl& path);
 
 private:
     RecieverServer* _listener;

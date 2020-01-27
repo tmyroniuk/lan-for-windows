@@ -17,7 +17,9 @@ void Transmission::onError(QFile& file, QTcpSocket& socket)
     qDebug() <<"socket" << socket.error() << socket.errorString();
     if(file.isOpen()) file.close();
     if(socket.state() == QTcpSocket::ConnectedState) socket.disconnectFromHost();
-    emit finished(false, this);
+    emit finished(false);
 }
 
 double Transmission::progress() const { return _progress; }
+
+QString Transmission::fileName() const { return _fileName; }
