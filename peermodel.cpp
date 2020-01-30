@@ -3,30 +3,30 @@
 
 PeerModel::PeerModel(QObject *parent)
     : QAbstractListModel(parent),
-      _list(nullptr) {}
+      _manager(nullptr) {}
 
-PeerModel::~PeerModel() { delete _list; }
+PeerModel::~PeerModel() { delete _manager; }
 
 int PeerModel::rowCount(const QModelIndex &parent) const
 {
-    if (parent.isValid() || !_list)
+    if (parent.isValid() || !_manager)
         return 0;
 
-    return _list->data()->size();
+    return _manager->peerList()->size();
 }
 
 QVariant PeerModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid() || !_list)
+    if (!index.isValid() || !_manager)
         return QVariant();
 
     switch(role){
     case NameRole:
-        return _list->data()->value(index.row())->name();
+        return _manager->peerList()->value(index.row())->name();
     case AddressRole:
-        return _list->data()->value(index.row())->address().toString();
+        return _manager->peerList()->value(index.row())->address().toString();
     case PeerRole:
-        return QVariant::fromValue(_list->data()->value(index.row()));
+        return QVariant::fromValue(_manager->peerList()->value(index.row()));
     }
     return QVariant();
 }
@@ -43,29 +43,29 @@ QHash<int, QByteArray> PeerModel::roleNames() const
 
 bool PeerModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    if (!index.isValid() || !_list)
+    if (!index.isValid() || !_manager)
         return false;
 
     switch(role){
     case SendRole:
-        _list->sendTo(index.row(), value.toUrl());
+        _manager->send(index.row(), value.toUrl());
         emit dataChanged(index, index, QVector<int>() << PeerRole);
         return true;
     }
     return false;
 }
 
-PeerList *PeerModel::list() const { return _list; }
+TransmissionManager *PeerModel::manager() const { return _manager; }
 
-void PeerModel::setList(PeerList *list)
+void PeerModel::setManager(TransmissionManager *manager)
 {
     beginResetModel();
 
-    if(_list) delete _list;
-    _list = list;
+    if(_manager) delete _manager;
+    _manager = manager;
 
-    connect(_list, &PeerList::startRefresh, this, [this](){ beginResetModel(); });
-    connect(_list, &PeerList::finishRefresh, this, [this](){ endResetModel(); });
+    connect(_manager, &TransmissionManager::startRefresh, this, [this](){ beginResetModel(); });
+    connect(_manager, &TransmissionManager::finishRefresh, this, [this](){ endResetModel(); });
 
     endResetModel();
 }

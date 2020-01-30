@@ -17,7 +17,6 @@ SOURCES += \
         globals.cpp \
         main.cpp \
         peer.cpp \
-        peerlist.cpp \
         peermodel.cpp \
         reciever.cpp \
         recieverserver.cpp \
@@ -43,7 +42,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     globals.h \
     peer.h \
-    peerlist.h \
     peermodel.h \
     reciever.h \
     recieverserver.h \

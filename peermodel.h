@@ -3,14 +3,14 @@
 
 #include <QAbstractListModel>
 
-#include "peerlist.h"
+#include "transmissionmanager.h"
 
 class PeerModel : public QAbstractListModel
 {
     Q_OBJECT
-    Q_PROPERTY(PeerList* list READ list WRITE setList)
+    Q_PROPERTY(TransmissionManager* manager READ manager WRITE setManager)
 
-    PeerList* _list;
+    TransmissionManager* _manager;
 
 public:
     explicit PeerModel(QObject *parent = nullptr);
@@ -33,9 +33,9 @@ public:
 
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
-    PeerList* list() const;
+    TransmissionManager* manager() const;
 
-    void setList(PeerList* list);
+    void setManager(TransmissionManager* manager);
 };
 
 #endif // PEERMODEL_H
