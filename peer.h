@@ -44,7 +44,7 @@ public:
 
     void addTransmission(Transmission* transmission);
 
-    QVector<Transmission *> transmissions() const;
+    QVector<Transmission *>* transmissions();
 };
 
 #endif // PEER_H

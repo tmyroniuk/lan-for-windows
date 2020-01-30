@@ -8,6 +8,7 @@
 class TransmissionModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(Peer* peerPtr READ peer WRITE setPeer)
 
     Peer* _peer;
 

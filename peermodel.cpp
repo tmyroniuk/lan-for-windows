@@ -1,4 +1,5 @@
 #include "peermodel.h"
+#include <QVariant>
 
 PeerModel::PeerModel(QObject *parent)
     : QAbstractListModel(parent),
@@ -11,7 +12,7 @@ int PeerModel::rowCount(const QModelIndex &parent) const
     if (parent.isValid() || !_list)
         return 0;
 
-    return _list->data().size();
+    return _list->data()->size();
 }
 
 QVariant PeerModel::data(const QModelIndex &index, int role) const
@@ -21,9 +22,11 @@ QVariant PeerModel::data(const QModelIndex &index, int role) const
 
     switch(role){
     case NameRole:
-        return _list->data()[index.row()].name();
+        return _list->data()->value(index.row())->name();
     case AddressRole:
-        return _list->data()[index.row()].address().toString();
+        return _list->data()->value(index.row())->address().toString();
+    case PeerRole:
+        return QVariant::fromValue(_list->data()->value(index.row()));
     }
     return QVariant();
 }
@@ -34,6 +37,7 @@ QHash<int, QByteArray> PeerModel::roleNames() const
     hash[NameRole] = "name";
     hash[AddressRole] = "address";
     hash[SendRole] = "send";
+    hash[PeerRole] = "peer";
     return hash;
 }
 
@@ -45,6 +49,7 @@ bool PeerModel::setData(const QModelIndex &index, const QVariant &value, int rol
     switch(role){
     case SendRole:
         _list->sendTo(index.row(), value.toUrl());
+        emit dataChanged(index, index, QVector<int>() << PeerRole);
         return true;
     }
     return false;

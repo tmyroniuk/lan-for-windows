@@ -4,7 +4,7 @@ import QtQuick.Controls 2.12
 
 ApplicationWindow {
     id: application
-    width: 400; height: gui.count * 120 + 70
+    width: 400; height: gui.count * 120 + 170
     x: Screen.width + 2; y: Screen.height / 12
     color: "transparent"
 

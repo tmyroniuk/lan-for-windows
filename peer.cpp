@@ -4,16 +4,17 @@ void Peer::onProgressChanged()
 {
     emit progressChanged(
         _transmissions.indexOf(
-                    dynamic_cast<Transmission*>(sender())));
+            dynamic_cast<Transmission*>(sender())));
 }
 
 void Peer::onFinished(bool)
 {
     int index = _transmissions.indexOf(dynamic_cast<Transmission*>(sender()));
     emit startRemove(index);
-    _transmissions[index]->deleteLater();
     _transmissions.remove(index);
+    _transmissions[index]->deleteLater();
     emit finishRemove();
+    qDebug() << "helo";
 }
 
 void Peer::onNameChanged()
@@ -47,4 +48,4 @@ void Peer::addTransmission(Transmission *transmission)
     _transmissions.append(transmission);
 }
 
-QVector<Transmission *> Peer::transmissions() const { return _transmissions; }
+QVector<Transmission *>* Peer::transmissions() { return &_transmissions; }

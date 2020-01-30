@@ -7,9 +7,9 @@
 PeerList::PeerList(QObject *parent) :
     QObject(parent) {}
 
-QVector<Peer> PeerList::data() const { return _list; }
+QVector<Peer*>* PeerList::data() { return &_list; }
 
-void PeerList::sendTo(int i, const QUrl& filePath) { TransmissionManager::send(_list[i], filePath); }
+void PeerList::sendTo(int i, const QUrl& filePath) { TransmissionManager::send(*_list[i], filePath); }
 
 void PeerList::refresh()
 {
@@ -17,7 +17,7 @@ void PeerList::refresh()
 
     emit startRefresh();
     connect(&_searcher, &Searcher::answerRecieved, this,
-        [this](const QString& name, const QHostAddress& address){ _list.append(Peer(name, address)); });
+        [this](const QString& name, const QHostAddress& address){ _list.append(new Peer(name, address)); });
 
     _searcher.send();
 

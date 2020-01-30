@@ -6,6 +6,7 @@
 #include "transmissionmanager.h"
 #include "peerlist.h"
 #include "peermodel.h"
+#include "transmissionmodel.h"
 
 int main(int argc, char *argv[])
 {
@@ -15,6 +16,8 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<PeerModel>("NetApp", 1, 0, "PeerModel");
     qmlRegisterUncreatableType<PeerList>("NetApp", 1, 0, "PeerList", "Backend type");
+    qmlRegisterType<TransmissionModel>("NetApp", 1, 0, "TransmissionModel");
+    qmlRegisterUncreatableType<Peer>("NetApp", 1, 0, "Peer", "Backend type");
 
     auto list = new PeerList;
 

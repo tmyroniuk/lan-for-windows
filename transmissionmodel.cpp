@@ -9,7 +9,7 @@ int TransmissionModel::rowCount(const QModelIndex &parent) const
     if (parent.isValid() || !_peer)
         return 0;
 
-    return _peer->transmissions().size();
+    return _peer->transmissions()->size();
 }
 
 QVariant TransmissionModel::data(const QModelIndex &index, int role) const
@@ -19,9 +19,9 @@ QVariant TransmissionModel::data(const QModelIndex &index, int role) const
 
     switch(role){
     case NameRole:
-        return _peer->transmissions()[index.row()]->fileName();
+        return _peer->transmissions()->value(index.row())->fileName();
     case ProgressRole:
-        return _peer->transmissions()[index.row()]->progress();
+        return _peer->transmissions()->value(index.row())->progress();
     }
 
     return QVariant();
@@ -30,7 +30,7 @@ QVariant TransmissionModel::data(const QModelIndex &index, int role) const
 QHash<int, QByteArray> TransmissionModel::roleNames() const
 {
     QHash<int, QByteArray> hash;
-    hash[NameRole] = "name";
+    hash[NameRole] = "fileName";
     hash[ProgressRole] = "progress";
     return hash;
 }

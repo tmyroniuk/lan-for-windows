@@ -13,12 +13,12 @@ class PeerList : public QObject{
 
     TransmissionManager _trManager;
     Searcher _searcher;
-    QVector<Peer> _list;
+    QVector<Peer*> _list;
 
 public:
     explicit PeerList(QObject *parent = nullptr);
 
-    QVector<Peer> data() const;
+    QVector<Peer*>* data();
 
     void sendTo(int i, const QUrl& filePath);
 
