@@ -5,8 +5,6 @@ PeerModel::PeerModel(QObject *parent)
     : QAbstractListModel(parent),
       _manager(nullptr) {}
 
-PeerModel::~PeerModel() { delete _manager; }
-
 int PeerModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid() || !_manager)
@@ -61,11 +59,14 @@ void PeerModel::setManager(TransmissionManager *manager)
 {
     beginResetModel();
 
-    if(_manager) delete _manager;
+    if(_manager) _manager->disconnect(this);
     _manager = manager;
 
     connect(_manager, &TransmissionManager::startRefresh, this, [this](){ beginResetModel(); });
     connect(_manager, &TransmissionManager::finishRefresh, this, [this](){ endResetModel(); });
+    connect(_manager, &TransmissionManager::dataChanged, this, [this](int i){
+        emit dataChanged(index(i), index(i));
+    });
 
     endResetModel();
 }

@@ -18,7 +18,7 @@ class Peer : public QObject
 private slots:
     void onProgressChanged();
 
-    void onFinished(bool status);
+    void onFinished();
 
     void onNameChanged();
 
@@ -31,12 +31,18 @@ signals:
 
     void finishRemove();
 
+    void startAdd(int);
+
+    void finishAdd();
+
 public:    
     Peer(const QString& name, const QHostAddress& address, QObject* parent = nullptr);
 
     Peer() = default;
 
     Peer(const Peer& other);
+
+    ~Peer();
 
     QString name() const;
 

@@ -11,15 +11,13 @@
 #include "searcher.h"
 #include "peer.h"
 
-class Peer;
-
 class TransmissionManager : public QObject
 {
     Q_OBJECT
 
     Searcher _searcher;
     RecieverServer* _listener;
-    QVector<Peer*> _list;
+    QVector<Peer*>* _list;
 
 public:
     explicit TransmissionManager(QObject *parent = nullptr);
@@ -33,17 +31,21 @@ public:
 public slots:
     void refresh();
 
-    void clear();
-
 private slots:
-    void onComplete(QString fileName, QString hostName, QHostAddress address);
+    void onNewConnection(Transmission* transmission, const QHostAddress& address);
 
-    void onError(QString fileName, QString hostName, QHostAddress address, QString errorString);
+    void onFinished(const bool& status, const QString& fileName, const QString& errorString);
 
 signals:
+    void complete(QString);
+
+    void error(QString, QString);
+
     void startRefresh();
 
     void finishRefresh();
+
+    void dataChanged(int);
 };
 
 #endif // TRANSMISSIONMANAGER_H

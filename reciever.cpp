@@ -7,7 +7,6 @@ Reciever::Reciever(qintptr socketDescriptor, QObject *parent) :
 void Reciever::start() {
     QFile file;
     QTcpSocket socket;
-    QString fileName;
     qint64 fileSize;
 
     qint64 currentSize = 0;
@@ -20,12 +19,13 @@ void Reciever::start() {
         onError(file, socket);
         return;
     }
+    emit peerConnected(QHostAddress(socket.peerAddress().toIPv4Address()));
 
     //get file name and size
     socket.waitForReadyRead(TIMEOUT);
-    readStream >> fileName;
+    readStream >> _fileName;
     readStream >> fileSize;
-    file.setFileName(SAVING_PATH + fileName);
+    file.setFileName(SAVING_PATH + _fileName);
     emit nameChanged();
 
     //create file
@@ -53,6 +53,6 @@ void Reciever::start() {
     socket.disconnectFromHost();
     socket.waitForDisconnected(TIMEOUT);
 
-    qDebug() << "recieving finished" << SAVING_PATH + fileName;
-    emit finished(true);
+    qDebug() << "recieving finished" << SAVING_PATH + _fileName;
+    emit finished(true, _fileName);
 }

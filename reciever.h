@@ -3,9 +3,12 @@
 
 #include <QObject>
 #include <QDataStream>
+#include <QHostAddress>
 
 #include "transmission.h"
 #include "globals.h"
+
+Q_DECLARE_METATYPE(QHostAddress)
 
 class Reciever : public Transmission
 {
@@ -14,6 +17,9 @@ class Reciever : public Transmission
 
 public:
     explicit Reciever(qintptr socketDescriptor, QObject *parent = nullptr);
+
+signals:
+    void peerConnected(QHostAddress);
 
 public slots:
     void start() override;

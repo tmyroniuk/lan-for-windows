@@ -2,6 +2,8 @@ import QtQuick 2.12
 import QtQuick.Window 2.12
 import QtQuick.Controls 2.12
 
+import NetApp 1.0
+
 ApplicationWindow {
     id: application
     width: 400; height: gui.count * 120 + 170
@@ -12,17 +14,24 @@ ApplicationWindow {
 
     visible: x >= Screen.width ? false : true
 
-    InListControl {
-        id: control
-        anchors.top: application.top
+    InListControl { id: control; anchors.top: application.top }
+
+    AppGui { id: gui; anchors.top: control.bottom }
+
+    Connections {
+        target: TrManager
+        function onComplete(fileName) {
+            trayIcon.showMessage("Success", fileName)
+        }
+
+        function onError(fileName, errorString) {
+            trayIcon.showMessage("Success", fileName + errorString)
+        }
     }
 
-    AppGui {
-        id: gui
-        anchors.top: control.bottom
+    TrayIcon {
+        id: trayIcon
     }
-
-    TrayControl {}
 
     Behavior on x {
         SpringAnimation { spring: 8; damping: 10 }
@@ -33,9 +42,8 @@ ApplicationWindow {
     }
 
     function showWindow() {
-        peerList.clear()
+        trManager.refresh()
         x = Screen.width - width
-        peerList.refresh()
     }
 
     onClosing: {

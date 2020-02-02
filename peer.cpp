@@ -7,14 +7,12 @@ void Peer::onProgressChanged()
             dynamic_cast<Transmission*>(sender())));
 }
 
-void Peer::onFinished(bool)
+void Peer::onFinished()
 {
     int index = _transmissions.indexOf(dynamic_cast<Transmission*>(sender()));
     emit startRemove(index);
     _transmissions.remove(index);
-    _transmissions[index]->deleteLater();
     emit finishRemove();
-    qDebug() << "helo";
 }
 
 void Peer::onNameChanged()
@@ -36,6 +34,10 @@ Peer::Peer(const Peer &other)
     _transmissions = other._transmissions;
 }
 
+Peer::~Peer()
+{
+}
+
 QString Peer::name() const { return _name; }
 
 QHostAddress Peer::address() const { return _address; }
@@ -45,7 +47,9 @@ void Peer::addTransmission(Transmission *transmission)
     connect(transmission, &Transmission::progressChanged, this, &Peer::onProgressChanged);
     connect(transmission, &Transmission::nameChanged, this, &Peer::onNameChanged);
     connect(transmission, &Transmission::finished, this, &Peer::onFinished);
+    startAdd(_transmissions.size());
     _transmissions.append(transmission);
+    finishAdd();
 }
 
 QVector<Transmission *>* Peer::transmissions() { return &_transmissions; }

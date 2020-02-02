@@ -16,6 +16,11 @@ public:
 protected:
     void incomingConnection(qintptr socketDescriptor) override;
 
+public slots:
+    void onPeerConnected(const QHostAddress& host);
+
+signals:
+    void newConnection(Transmission*, QHostAddress);
 };
 
 #endif // RECIEVERSERVER_H

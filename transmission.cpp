@@ -13,11 +13,13 @@ bool Transmission::checkForError(QFile &file, QTcpSocket &socket)
 
 void Transmission::onError(QFile& file, QTcpSocket& socket)
 {
-    qDebug() <<"file" << file.error() << file.errorString();
-    qDebug() <<"socket" << socket.error() << socket.errorString();
+    QString errorString;
+    if(file.error() != QFile::NoError) errorString.append(file.errorString() + "\n");
+    if(socket.error() != QTcpSocket::UnknownSocketError) errorString.append(socket.errorString() + "\n");
+
     if(file.isOpen()) file.close();
     if(socket.state() == QTcpSocket::ConnectedState) socket.disconnectFromHost();
-    emit finished(false);
+    emit finished(false, _fileName, errorString);
 }
 
 double Transmission::progress() const { return _progress; }

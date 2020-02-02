@@ -21,7 +21,7 @@ ListView{
 
     model: PeerModel{
         id: peerModel
-        list: peerList
+        manager: trManager
     }
 
     delegate: ColumnLayout {

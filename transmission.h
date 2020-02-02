@@ -20,7 +20,7 @@ public slots:
     virtual void start() = 0;
 
 signals:
-    void finished(bool);
+    void finished(bool, QString, QString errorString = "");
 
     void progressChanged();
 

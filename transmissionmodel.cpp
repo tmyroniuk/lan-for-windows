@@ -59,5 +59,13 @@ void TransmissionModel::setPeer(Peer *peer) {
         endRemoveRows();
     });
 
+    connect(_peer, &Peer::startAdd, this, [this](int i){
+        beginInsertRows(QModelIndex(), i, i);
+    });
+
+    connect(_peer, &Peer::finishAdd, this, [this](){
+        endInsertRows();
+    });
+
     endResetModel();
 }
